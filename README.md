@@ -134,9 +134,6 @@ cd rag-chatbot
 ### 2. Configure as Variáveis de Ambiente
 
 ```bash
-# Copiar arquivo de exemplo
-cp _env .env
-
 # Editar se necessário (opcional)
 nano .env
 ```
