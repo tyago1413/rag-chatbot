@@ -155,8 +155,8 @@ CHUNK_SIZE=500
 ### 3. Inicialize o Sistema
 
 ```bash
-# Iniciar todos os serviços
-docker-compose up -d
+# Build das imagens e iniciar todos os serviços
+docker-compose up -d --build
 
 # Ver logs em tempo real
 docker-compose logs -f
