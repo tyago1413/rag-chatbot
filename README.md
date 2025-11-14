@@ -228,13 +228,6 @@ curl -X POST http://localhost:8000/chat \
   -F "file=@documento.pdf"
 ```
 
-#### Scraping Manual
-
-```bash
-curl -X POST http://localhost:8000/scrape \
-  -F "url=https://example.com/artigo"
-```
-
 ---
 
 ## 📡 API
