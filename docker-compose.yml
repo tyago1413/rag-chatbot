@@ -1,0 +1,130 @@
+name: imparprojeto
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_TELEMETRY_ENABLED=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - backend
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - LANG=C.UTF-8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_KEEP_ALIVE=30m
+      - OLLAMA_NUM_PARALLEL=2
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+    networks:
+      - backend
+
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        echo 'Aguardando servidor ollama ficar pronto...'
+        until ollama list >/dev/null 2>&1; do sleep 2; done
+        echo 'Verificando modelos disponíveis...'
+        if ! ollama list | grep -q "llama3"; then
+          echo 'Baixando modelo llama3 (~4GB)...'
+          ollama pull llama3
+        else
+          echo 'Modelo llama3 já está disponível!'
+        fi
+        echo 'Modelo pronto para uso.'
+    networks:
+      - backend
+    restart: "no"
+
+  api:
+    build: ./api
+    container_name: rag-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SCRAPE_URL=${SCRAPE_URL}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL}
+      - TOP_K=${TOP_K}
+      - MAX_CONTEXT_CHARS=${MAX_CONTEXT_CHARS}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - LITESTAR_WARN_IMPLICIT_SYNC_TO_THREAD=${LITESTAR_WARN_IMPLICIT_SYNC_TO_THREAD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./api:/app
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  n8n_data:
+  postgres_data:
+  ollama_models:
+
+networks:
+  backend:
+    driver: bridge
