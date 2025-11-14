@@ -7,7 +7,8 @@ import uuid
 import logging
 import json
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+
 
 from app.config import settings
 from app.database import db

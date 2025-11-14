@@ -3,7 +3,7 @@ Serviço RAG - Processamento de documentos e respostas
 VERSÃO CORRIGIDA: Prioriza documento recém-processado
 """
 from litestar.datastructures import UploadFile
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.memory import ConversationBufferMemory
 import uuid

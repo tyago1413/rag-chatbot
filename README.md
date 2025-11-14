@@ -127,7 +127,7 @@ Sistema completo de chatbot com RAG (Retrieval-Augmented Generation) utilizando 
 ### 1. Clone o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/rag-chatbot.git
+git clone https://github.com/tyago1413/rag-chatbot.git
 cd rag-chatbot
 ```
 
@@ -345,11 +345,10 @@ Health check da API.
 ```
 rag-chatbot/
 ├── docker-compose.yml          # Orquestração dos serviços
-├── _env                         # Variáveis de ambiente (template)
-├── .env                         # Variáveis de ambiente (não versionado)
+├── .env                        # Variáveis de ambiente
 ├── RAG_Chatbot.json            # Workflow N8N
 │
-├── api/                         # Backend Python
+├── api/                        # Backend Python
 │   ├── Dockerfile              # Container da API
 │   ├── requirements.txt        # Dependências Python
 │   ├── main.py                 # Endpoints da API
@@ -575,15 +574,9 @@ Contribuições são bem-vindas! Para contribuir:
 
 ---
 
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-
----
-
 ## 👥 Autores
 
-- **Seu Nome** - *Trabalho Inicial* - [GitHub](https://github.com/seu-usuario)
+- **Tiago Mendonça** - *Trabalho Inicial* - [GitHub](https://github.com/tyago1413)
 
 ---
 
@@ -602,12 +595,11 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 Para dúvidas ou problemas:
 
-- 📧 Email: seu-email@exemplo.com
-- 💬 Issues: [GitHub Issues](https://github.com/seu-usuario/rag-chatbot/issues)
-- 📖 Documentação: [Wiki](https://github.com/seu-usuario/rag-chatbot/wiki)
+- 📧 Email: tyago_art@hotmail.com
+- 💬 Issues: [GitHub Issues](https://github.com/tyago1413/rag-chatbot/issues)
 
 ---
 
 <p align="center">
-  Feito com ❤️ usando Python, Docker e muito café ☕
+  Feito com ❤️ usando Python, Docker, Claude.ia, e muito café ☕
 </p>

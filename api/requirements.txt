@@ -5,6 +5,7 @@ uvicorn[standard]==0.30.6
 # LangChain
 langchain==0.3.7
 langchain-community==0.3.7
+langchain-huggingface==0.1.2
 
 # LLM
 ollama==0.4.4
