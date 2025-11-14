@@ -1,6 +1,4 @@
 # Ambiente
-.env
-*.env
 !_env
 
 # Python
